@@ -34,25 +34,36 @@ let print_int_option = function
    
 let rec print_list = 
   function
-    [] -> ()
+    [] -> Printf.printf "fin liste \n" 
   | e::l -> print_string e ; print_string "\n" ; print_list l
 
 
 
 
 let res tab = 
-  let c = ref 0 in
+  let c = ref (Array.length tab) in
+  let scratch = Array.make (Array.length tab) 1 in 
+
   for i = 0 to Array.length tab -1 do 
-    () 
+      let nb_g = ref 0 in 
+      let l1 = List.nth (String.split_on_char ':' tab.(i))  1 in
+      let l = String.split_on_char '|'l1 in
+      let [lEnters;lNum] = List.map (fun a -> String.split_on_char ' ' a) l in
+      List.iter (fun a ->  if a = "" then () 
+                    else if List.mem a lEnters then begin
+                      incr nb_g;
+                                        end ) lNum;
+      c := !c + (!nb_g)*scratch.(i);
+      for s = 1 to (!nb_g) do
+        scratch.(s+ i)<- scratch.(s+i) + scratch.(i);
+      done;
   done;
   !c
 
-let res2 tab = () 
 
 let () = 
-  let fichier = read_lines (open_in "day0.txt") in
+  let fichier = read_lines (open_in "day4.txt") in
   let tab =  Array.of_list fichier in
-  print_int_option (nombre_of_indice 8 tab.(2));
   let r1 = res tab in 
   (*let r2 = res2 tab in *)
   print_string "\n \n";
