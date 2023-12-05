@@ -9,6 +9,7 @@ let is_digit c =
   (int_of_char c - int_of_char '0') <=9 && (int_of_char c - 48) >= 0
 
 
+
 let nombre_of_indice i s = 
   let nb = ref "" in
   if i >= String.length s || i < 0 ||not (is_digit s.[i]) then 
