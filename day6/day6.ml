@@ -42,22 +42,45 @@ let rec print_list =
 
 let res tab = 
   let c = ref 0 in
-  for i = 0 to Array.length tab -1 do 
-    () 
+  let mult = ref 1 in
+  let time = [|57;72;69;92|] in
+  let dist = [|291;1172;1176;2026|] in
+  for i = 0 to Array.length time -1 do 
+    for j = 0 to time.(i) do
+      let speed = j in
+      let left_time = time.(i) - j in
+      let travel_dist = left_time * speed in
+      if travel_dist > dist.(i) then incr c;
+    done;
+    mult := !c *(!mult);
+    c := 0;
+  done;
+ !mult 
+
+let res2 tab =  
+   let c = ref 0 in
+  let mult = ref 1 in
+  let time = [|57726992|] in
+  let dist = [|291117211762026|] in
+  for i = 0 to Array.length time -1 do 
+    for j = 0 to time.(i) do
+      let speed = j in
+      let left_time = time.(i) - j in
+      let travel_dist = left_time * speed in
+      if travel_dist > dist.(i) then incr c;
+    done;
   done;
   !c
 
-let res2 tab = () 
 
 let () = 
-  let fichier = read_lines (open_in "day0.txt") in
+  let fichier = read_lines (open_in "day6.txt") in
   let tab =  Array.of_list fichier in
-  print_int_option (nombre_of_indice 8 tab.(2));
   let r1 = res tab in 
-  (*let r2 = res2 tab in *)
+  let r2 = res2 tab in 
   print_string "\n \n";
   print_string "le résultat est : ";
   print_int (r1);
   print_string "\n \n";
   print_string "le résultat 2 est : ";
-  (*print_int (r2);*)
+  print_int (r2);
