@@ -51,7 +51,6 @@ let res2 tab = ()
 let () = 
   let fichier = read_lines (open_in "day0.txt") in
   let tab =  Array.of_list fichier in
-  print_int_option (nombre_of_indice 8 tab.(2));
   let r1 = res tab in 
   (*let r2 = res2 tab in *)
   print_string "\n \n";
