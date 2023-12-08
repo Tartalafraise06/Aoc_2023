@@ -56,10 +56,13 @@ type main =
   |Five
 
 
+
+
 let type_main main = 
   let tab = Array.make 15 0 in
   for i = 0 to 4 do
   
+  Printf.printf "fini %d \n" main.(i);
     tab.(main.(i)) <- tab.(main.(i)) + 1;
   done;
   Array.sort (Stdlib.compare) tab;
@@ -72,7 +75,7 @@ let type_main main =
   |1,1,1,1,1 -> High
   |0,1,1,1,2 -> Op
   |0,0,1,2,2 -> Tp
-  |_ -> failwith "erreur"
+  |_ -> failwith "cas de raciste"
 
 
 let swap arr i j =
@@ -123,10 +126,7 @@ let res tab =
                                                 |'J' -> 11 
                                                 |'K' -> 13
                                                 |'Q' -> 12  
-                                                |'T' -> 10 
-                                                | _ -> failwith "erreur"
-
-    ) in                         
+                                                |'T' -> 10 ) in                         
     let score = List.nth  (String.split_on_char ' ' tab.(i)) 1 in
     mains.(i) <- (int_of_string score,(type_main transf_main,transf_main));
   done;
@@ -177,10 +177,7 @@ let res2 tab =
                                                 |'J' -> 11 
                                                 |'K' -> 13
                                                 |'Q' -> 12  
-                                                |'T' -> 10 
-                                                | _ -> failwith "erreur"
-
-    ) in                         
+                                                |'T' -> 10 ) in                         
     let n = transfo transf_main in
     let score = List.nth  (String.split_on_char ' ' tab.(i)) 1 in
     mains.(i) <- (int_of_string score,(type_main n,transf_main));
@@ -193,18 +190,16 @@ let res2 tab =
     swap mains !min_ind i;
   done;
   Array.iteri (fun i a -> c:= !c + (fst a)*(i+1)) mains;
-  Array.iteri (fun i a -> print_type_main (fst (snd a)); Printf.printf "rang %d, score %d  \n" i (fst a)) mains;
+  Array.iteri (fun i a -> print_type_main (fst (snd a)); Printf.printf "rang %d, score %d , \n" i (fst a)) mains;
   !c
 
 
 let () = 
-  let fichier = read_lines (open_in "tay7.txt") in
+  let fichier = read_lines (open_in "entree_theo.txt") in
   let tab =  Array.of_list fichier in
-  let r1 = res tab in 
+(*  let r1 = res tab in *)
   let r2 = res2 tab in 
-  print_string "\n";
-  print_string "le résultat 1 est : ";
-  print_int (r1);
+(* print_int (r1);*)
   print_string "\n \n";
   print_string "le résultat 2 est : ";
   print_int (r2)

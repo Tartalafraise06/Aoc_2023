@@ -49,13 +49,15 @@ let res tab =
 let res2 tab = () 
 
 let () = 
-  let fichier = read_lines (open_in "day0.txt") in
+  let fichier = read_lines (open_in "day8.txt") in
   let tab =  Array.of_list fichier in
+  print_string "===== START ===== \n";
   let r1 = res tab in 
-  (*let r2 = res2 tab in *)
-  print_string "\n \n";
+  let r2 = res2 tab in 
+  print_string "\n \n ";
   print_string "le résultat est : ";
   print_int (r1);
   print_string "\n \n";
   print_string "le résultat 2 est : ";
-  (*print_int (r2);*)
+  print_int (r2);
+  print_string "\n \n \n  ===== END ===== \n \n \n \n"
