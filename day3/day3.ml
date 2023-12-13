@@ -44,7 +44,6 @@ let res tab =
         while  !j+(!compteur) < taille && is_digit tab.(i).[!compteur + (!j)]  do
           incr compteur;
         done; 
-        Printf.printf "ligne  :  %d \n" i;
 (*        print_string "deb \n";*)
         let deb = (if !j = 0 then (!j) else !j-1) in
         let fin = (if !compteur + (!j) < taille then !compteur + (!j) +1  else  !compteur + (!j) ) in
@@ -57,8 +56,8 @@ let res tab =
         if is_in j s1 s2 s3 then begin
           let number = (int_of_string (String.sub tab.(i) (!j) (!compteur))) in
           c:=  number + (!c);
-          Printf.printf "%d  \n" number;
-        end;
+        end
+        else Printf.printf "%d pas dedans \n" (int_of_string (String.sub tab.(i) (!j) (!compteur)));
         j := !j  + (!compteur);
       end;
   
@@ -94,7 +93,6 @@ let res2 tab =
         while  !j+(!compteur) < taille && is_digit tab.(i).[!compteur + (!j)]  do
           incr compteur;
         done; 
-        Printf.printf "ligne  :  %d \n" i;
 (*        print_string "deb \n";*)
         let deb = (if !j = 0 then (!j) else !j-1) in
         let fin = (if !compteur + (!j) < taille then !compteur + (!j) +1  else  !compteur + (!j) ) in
@@ -110,7 +108,6 @@ let res2 tab =
           let number = (int_of_string (String.sub tab.(i) (!j) (!compteur))) in
           let i_add,j_add = t.(2)-2+i , deb + t.(1) in
           l:= [|number;i_add;j_add;!id|]::(!l); 
-          Printf.printf "%d  \n" number;
         end;
         j := !j  + (!compteur);
       end;
@@ -123,7 +120,7 @@ let res2 tab =
 
 
 let () = 
-  let fichier = read_lines (open_in "day3.txt") in
+  let fichier = read_lines (open_in "tay3_b.txt") in
   let tab =  Array.of_list fichier in
   let r1 = res tab in 
   let r2 = res2 tab in 
