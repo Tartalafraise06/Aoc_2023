@@ -146,26 +146,38 @@ let res2 tab =
   Printf.printf "depart : \n";
   let res1 = chercher (!i_start) (!j_start) mat in
   let tot = ref 0 in
+  for i = 0 to Array.length mat -1 do
+    for j = 0 to Array.length mat.(0) - 1 do
+      if snd mat.(i).(j) then print_string "#"
+      else print_string (fst mat.(i).(j))
+    done;
+    print_string "\n"
+  done;
 
+  
   for i = 0 to Array.length mat -1 do
     for j = 0 to Array.length mat.(0) - 1 do
       let indice = ref j in
       let nombre_mur = ref 0 in
-      let dernier = "" in
+      let dernier = ref "" in
       if not (snd mat.(i).(j)) then begin 
-        Printf.printf "je rentre \n";
         while !indice >= 0 do
           let pipe, is_in_loop = mat.(i).(!indice) in
           if is_in_loop then begin
-            if List.mem pipe ["|";"L";"7";"J";"F";"S"] then
-              if dernier 
-              incr nombre_mur; 
+            if List.mem pipe ["|";"L";"7";"J";"F";"S"] then begin
+              if pipe = "L"  && !dernier = "7"  then
+                incr nombre_mur 
+              else if  pipe = "F"  && !dernier = "J" then 
+                incr nombre_mur
+              else if pipe = "|" then 
+                incr nombre_mur;
+            dernier := pipe;
+            end;
           end;
         indice := !indice -1; 
         done;
-      Printf.printf "%d \n" !nombre_mur;
       end;
-    if !nombre_mur mod 2  = 1 then incr tot;
+    if !nombre_mur mod 2  = 1 then (incr tot;Printf.printf "%d %d \n" (i+1) (j+1))
       done;
   done; 
   !tot 
@@ -173,7 +185,7 @@ let res2 tab =
 
 let () = 
   Printf.printf "bonjour ";
-  let fichier = read_lines (open_in "tay10.txt") in
+  let fichier = read_lines (open_in "day10.txt") in
   let tab =  Array.of_list fichier in
   print_string "===== START ===== \n";
   let r1 = res tab in 

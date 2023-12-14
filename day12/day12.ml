@@ -94,34 +94,86 @@ let n_liste l =
   |1::q -> q 
   |t::q -> (t-1)::q
 
-(*
+
+
+
+let calc cases nombre = 
+  let long = Array.length cases in
+  let total = compter nombre in
+    let rec calculer cases nombre n = 
+    let longueur = Array.length cases in
+    let indice = ref 0 in
+    let verif = ref true in
+    let new_cases1 = Array.copy cases in
+    let new_cases2 = Array.copy cases in
+    if est_complete_lig cases  then (   
+      if est_admissible nombre cases then 1 
+      else 0 )
+    else begin
+      let resultat = ref 0 in
+      while !indice < longueur && !verif do
+        if cases.(!indice) = I then begin
+          new_cases1.(!indice) <- B ;
+          new_cases2.(!indice) <- N ;
+          resultat := !resultat + (calculer new_cases1 nombre n) + (calculer new_cases2 nombre (n+1)); 
+          verif := false;
+          end;
+        incr indice;
+      done; !resultat
+    end
+  in
+  calculer cases nombre 0 
+
+
+let calculer2 cases nombre = 
+  let long = Array.length cases in
+  let dico = Hashtbl.create 500 in
+  let rec aux cases nombre i = 
+    if i >= long then begin if  (est_admissible nombre cases) then 1 else 0 end
+    else ( 
+      let avant = Array.sub cases 0 i in
+      let apres = Array.sub cases (i+1) (long - i - 1) in
+      match cases.(i) with
+      |N -> if Hashtbl.mem dico "?" then Hashtbl.find dico "?" else begin
+            let resultat = aux cases nombre (i+1) in
+            resultat
+      end
+
+      |B -> if Hashtbl.mem dico "?" then Hashtbl.find dico "?" else begin 
+            let resultat = aux cases nombre (i+1) in 
+            resultat
+      end
+
+      |I -> let cpN = Array.copy cases in cpB = Array.copy cases in 
+            cpN.(i) <- N; 
+            cpB.(i) <- B;
+            let resultatB = aux cpB nombre (i+1) in
+            let resultatN = aux cpN nombre (i+1) in
+              resultatN + resultatB
+    ) 
+  in
+  aux cases nombre 0 
 
 let calculer2 les_cases nombre = 
   let memo = Hashtbl.create 42 in
   let nombre_originel = nombre in 
   let long = Array.length les_cases in
   let nombre_a_ajouter = ref 0 in
-
   List.iter (fun a -> nombre_a_ajouter:= !nombre_a_ajouter + a) nombre;
-
-
-  (*Le string qu'il reste le nb de combi, tous les numero qu'il reste à placer et enfin un booléen milieu d'une série de #*)
-
+  (*Le string qu'il reste, le nb de combi, tous les numero qu'il reste à placer et enfin un booléen milieu d'une série de #*)
   let rec aux cases nombre i = 
-
-(*    Printf.printf "\n"; print_couleur cases; Printf.printf "\n"; *)
-    
+    Printf.printf "\n"; print_couleur cases; Printf.printf "\n"; 
     let trace_avant = trace_lig (Array.sub cases  0 i ) in
-
 
     if i = long then  begin if (est_admissible nombre_originel cases) then 1  else 0 end
     
     else begin 
 
-      let apres = Array.sub cases (i+1) (long - i - 1) in
+    let apres = Array.sub cases (i+1) (long - i - 1) in
     let verif = if i > 0 && i < long-1 && cases.(i-1) = N && cases.(i+1) = N  && cases.(i) = N then true else false in
 
     if Hashtbl.mem memo (i,nombre,trace_avant,apres,verif) then begin  
+      Printf.printf "appel dic %d \n" i;
     Hashtbl.find memo (i,nombre,trace_avant,apres,verif) end
 
     else if nombre = [] then begin if (est_admissible nombre_originel cases) then 1  else 0 end
@@ -169,35 +221,6 @@ let calculer2 les_cases nombre =
   in 
   aux les_cases nombre 0 
 
-*)
-
-let calc cases nombre = 
-  let long = Array.length cases in
-  let total = compter nombre in
-    let rec calculer cases nombre n = 
-    let longueur = Array.length cases in
-    let indice = ref 0 in
-    let verif = ref true in
-    let new_cases1 = Array.copy cases in
-    let new_cases2 = Array.copy cases in
-    if est_complete_lig cases  then (   
-      if est_admissible nombre cases then 1 
-      else 0 )
-    else begin
-      let resultat = ref 0 in
-      while !indice < longueur && !verif do
-        if cases.(!indice) = I then begin
-          new_cases1.(!indice) <- B ;
-          new_cases2.(!indice) <- N ;
-          resultat := !resultat + (calculer new_cases1 nombre n) + (calculer new_cases2 nombre (n+1)); 
-          verif := false;
-          end;
-        incr indice;
-      done; !resultat
-    end
-  in
-  calculer cases nombre 0 
-
 
 
 let res tab = 
@@ -213,7 +236,7 @@ let res tab =
                                                                 )) in
 
     let nombre = List.map (fun a -> int_of_string a) (String.split_on_char ',' (List.nth l 1)) in
-    compteur  := !compteur + (calc cases nombre);
+    compteur  := !compteur + (calculer2 cases nombre);
     Printf.printf "ligne : %d \n" (i+1) ;
     Printf.printf "\n" ;
     Printf.printf " compteur %d " !compteur;
@@ -224,7 +247,7 @@ let res tab =
 
 
 
-let res2 tab =   
+let res2 tab = 0  (*
   let compteur = ref 0 in
   for i = 0 to Array.length tab -1 do 
     let l = String.split_on_char ' ' tab.(i) in
@@ -239,18 +262,18 @@ let res2 tab =
     let cases = Array.of_list (cases_fin @ cases_fin @ cases_fin @ cases_fin @ cases_l) in 
     let nombre_l = List.map (fun a -> int_of_string a) (String.split_on_char ',' (List.nth l 1)) in
     let nombre = nombre_l @ nombre_l @ nombre_l @ nombre_l @ nombre_l in 
-    compteur  := !compteur + (calc cases nombre); 
+    compteur  := !compteur + (calculer2 cases nombre); 
     Printf.printf "ligne : %d \n" (i+1) ;
     Printf.printf "\n" ;
     Printf.printf " compteur %d " !compteur;
     Printf.printf "\n";
   done;
   !compteur
-
+*)
 
 
 let () = 
-  let fichier = read_lines (open_in "day12.txt") in
+  let fichier = read_lines (open_in "tay12.txt") in
   let tab =  Array.of_list fichier in
   print_string "===== START ===== \n";
   let r1 = res tab in 
